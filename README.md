@@ -1,1 +1,1 @@
-apenas para redirecionamentos
+
