@@ -6,65 +6,58 @@
 <title>Adicionar ao Calendário</title>
 <style>
     body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         margin: 0;
         padding: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #f5f5f7;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        color: white;
-        text-align: center;
     }
     .container {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
+        background: white;
+        border-radius: 16px;
         padding: 30px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         max-width: 400px;
         width: 90%;
+        text-align: center;
     }
     .btn {
-        display: inline-block;
+        display: block;
         background: #007AFF;
         color: white;
-        padding: 15px 30px;
+        padding: 18px 30px;
         border-radius: 12px;
         text-decoration: none;
         font-size: 18px;
         font-weight: 600;
-        margin: 10px 0;
-        transition: all 0.3s ease;
+        margin: 15px 0;
         border: none;
-        cursor: pointer;
         width: 100%;
-    }
-    .btn:hover {
-        background: #0056CC;
-        transform: translateY(-2px);
+        cursor: pointer;
     }
     .btn-secondary {
-        background: #6c757d;
-    }
-    .btn-secondary:hover {
-        background: #545b62;
+        background: #34C759;
     }
     .event-info {
-        background: rgba(255, 255, 255, 0.1);
+        background: #f8f9fa;
         border-radius: 12px;
-        padding: 15px;
-        margin: 15px 0;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: left;
     }
     .instructions {
-        background: rgba(255, 255, 255, 0.2);
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
         border-radius: 10px;
         padding: 15px;
         margin: 15px 0;
         font-size: 14px;
         text-align: left;
+        color: #856404;
     }
 </style>
 </head>
@@ -73,108 +66,64 @@
         <h1>📅 Adicionar Evento</h1>
         
         <div class="event-info">
-            <h3>Agendamento Automático ✅</h3>
-            <p>Este é um agendamento automático de teste.</p>
-            <p><strong>Data:</strong> 12/10/2025 21:40</p>
+            <h3 style="margin: 0 0 10px 0;">Agendamento Automático ✅</h3>
+            <p style="margin: 0 0 10px 0;">Este é um agendamento automático de teste.</p>
+            <p style="margin: 0;"><strong>Data:</strong> 12/10/2025 21:47</p>
         </div>
 
-        <button class="btn" onclick="adicionarCalendario()">
-            📱 Adicionar ao Calendário
+        <!-- Método 1: Link direto para Google Calendar (funciona no iPhone) -->
+        <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=Agendamento%20Autom%C3%A1tico%20%E2%9C%85&dates=20251012T214710Z/20251012T224710Z&details=Este%20%C3%A9%20um%20agendamento%20autom%C3%A1tico%20de%20teste.&sf=true&output=xml" 
+           class="btn">
+            📅 Adicionar ao Calendário
+        </a>
+
+        <!-- Método 2: Download manual do .ics -->
+        <button class="btn btn-secondary" onclick="downloadICS()">
+            📥 Baixar Arquivo .ICS
         </button>
-        
-        <div class="instructions">
-            <strong>Instruções para iPhone:</strong><br>
-            1. Clique no botão acima<br>
-            2. Toque em "Abrir no Calendário"<br>
-            3. Confirme o evento e salve
-        </div>
 
-        <div style="margin-top: 20px; font-size: 12px; opacity: 0.7;">
-            Se não funcionar, tente abrir em outro navegador (Safari recomendado)
+        <div class="instructions">
+            <strong>Para iPhone:</strong><br>
+            1. Use o botão "Adicionar ao Calendário" (recomendado)<br>
+            2. Ou baixe o .ICS e compartilhe com o app Calendário
         </div>
     </div>
 
 <script>
-function adicionarCalendario() {
-    // Conteúdo do arquivo .ics
+function downloadICS() {
     const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Agendamento//App//EN
 BEGIN:VEVENT
-UID:20251012T214011Z@agendamento
 SUMMARY:Agendamento Automático ✅
 DESCRIPTION:Este é um agendamento automático de teste.
-DTSTART:20251012T214011Z
-DTEND:20251012T224011Z
-DTSTAMP:20251012T204011Z
-CREATED:20251012T204011Z
-LAST-MODIFIED:20251012T204011Z
-SEQUENCE:0
-STATUS:CONFIRMED
-TRANSP:OPAQUE
+DTSTART:20251012T214710Z
+DTEND:20251012T224710Z
+UID:20251012T214710Z@agendamento
+DTSTAMP:20251012T204710Z
 END:VEVENT
 END:VCALENDAR`;
 
-    // Cria blob com tipo MIME específico
-    const blob = new Blob([icsContent], { 
-        type: 'text/calendar;charset=utf-8;'
-    });
-    
-    // Cria URL
+    const blob = new Blob([icsContent], { type: 'text/calendar' });
     const url = URL.createObjectURL(blob);
     
-    // Para iOS - usa abordagem específica
-    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        // Método 1: Tenta abrir diretamente
-        window.location.href = url;
-        
-        // Método 2: Fallback após 1 segundo
-        setTimeout(function() {
-            // Cria link invisível e clica
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'evento.ics');
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Instruções específicas
-            setTimeout(function() {
-                alert('Se o calendário não abriu automaticamente:\n\n1. Toque no arquivo "evento.ics" que foi baixado\n2. Toque em "Compartilhar"\n3. Escolha "Copiar para Calendário"');
-            }, 500);
-        }, 1000);
-    } else {
-        // Para outros dispositivos - download normal
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'evento.ics';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'evento_calendario.ics';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
     
-    // Limpa a URL após um tempo
-    setTimeout(function() {
+    setTimeout(() => {
         URL.revokeObjectURL(url);
-    }, 30000);
+        alert('Arquivo baixado! No iPhone:\n\n1. Abra o app Arquivos\n2. Encontre "evento_calendario.ics"\n3. Toque no arquivo\n4. Toque em "Compartilhar"\n5. Escolha "Copiar para Calendário"');
+    }, 1000);
 }
 
-// Tenta executar automaticamente em iOS
+// Redirecionamento automático para Google Calendar em dispositivos móveis
 window.onload = function() {
-    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    const urlParams = new URLSearchParams(window.location.search);
-    
-    // Se for iOS e não tiver parâmetro de redirecionamento, tenta auto-executar
-    if (isIOS && !urlParams.has('auto')) {
-        // Adiciona parâmetro para evitar loop
-        if (!urlParams.has('executed')) {
-            setTimeout(function() {
-                window.location.href = window.location.href + '?executed=true';
-            }, 100);
-        } else {
-            setTimeout(adicionarCalendario, 500);
-        }
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+        console.log('Dispositivo móvel detectado - Google Calendar é a melhor opção');
     }
 };
 </script>
