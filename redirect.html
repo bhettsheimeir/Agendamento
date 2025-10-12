@@ -40,10 +40,17 @@
         transition: all 0.3s ease;
         border: none;
         cursor: pointer;
+        width: 100%;
     }
     .btn:hover {
         background: #0056CC;
         transform: translateY(-2px);
+    }
+    .btn-secondary {
+        background: #6c757d;
+    }
+    .btn-secondary:hover {
+        background: #545b62;
     }
     .event-info {
         background: rgba(255, 255, 255, 0.1);
@@ -60,70 +67,70 @@
         <div class="event-info">
             <h3>Agendamento Automático ✅</h3>
             <p>Este é um agendamento automático de teste.</p>
-            <p><strong>Data:</strong> 12/10/2025 21:23</p>
+            <p><strong>Data:</strong> 12/10/2025 21:31</p>
         </div>
 
-        <button class="btn" onclick="adicionarAoCalendario()">
-            📱 Adicionar ao Calendário
+        <button class="btn" onclick="baixarICS()">
+            📱 Baixar Arquivo .ICS
         </button>
         
+        <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=Agendamento%20Autom%C3%A1tico%20%E2%9C%85&dates=20251012T213120Z/20251012T223120Z&details=Este%20%C3%A9%20um%20agendamento%20autom%C3%A1tico%20de%20teste." class="btn btn-secondary" style="text-decoration: none;">
+            📅 Google Calendar
+        </a>
+        
         <p style="margin-top: 20px; font-size: 14px; opacity: 0.8;">
-            Clique no botão acima para adicionar este evento ao seu calendário.
+            <strong>Instruções para iPhone:</strong><br>
+            1. Clique em "Baixar Arquivo .ICS"<br>
+            2. Abra o arquivo baixado<br>
+            3. Toque em "Adicionar ao Calendário"
         </p>
     </div>
 
 <script>
-function adicionarAoCalendario() {
-    // Formata as datas para o padrão iCalendar
-    const dtStart = "20251012T212338Z";
-    const dtEnd = "20251012T222338Z";
+function baixarICS() {
+    // Formata as datas
+    const dtStart = "20251012T213120Z";
+    const dtEnd = "20251012T223120Z";
     
     // Cria o conteúdo do arquivo .ics
-    const icsContent = [
-        "BEGIN:VCALENDAR",
-        "VERSION:2.0",
-        "BEGIN:VEVENT",
-        "SUMMARY:Agendamento Automático ✅",
-        "DESCRIPTION:Este é um agendamento automático de teste.",
-        "DTSTART:" + dtStart,
-        "DTEND:" + dtEnd,
-        "END:VEVENT",
-        "END:VCALENDAR"
-    ].join("\n");
+    const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+SUMMARY:Agendamento Automático ✅
+DESCRIPTION:Este é um agendamento automático de teste.
+DTSTART:20251012T213120Z
+DTEND:20251012T223120Z
+END:VEVENT
+END:VCALENDAR`;
     
-    // Cria o blob e URL
+    // Cria o blob
     const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
     const url = window.URL.createObjectURL(blob);
     
-    // Tenta usar a API de download para dispositivos móveis
-    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        // Para iOS - abre em nova aba/window
-        window.open(url);
-    } else {
-        // Para outros dispositivos - download direto
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "evento.ics";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
+    // Cria link de download
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "evento.ics";
     
-    // Limpa a URL após um tempo
+    // Adiciona ao DOM e clica
+    document.body.appendChild(link);
+    link.click();
+    
+    // Remove do DOM e limpa URL
+    document.body.removeChild(link);
     setTimeout(() => {
         window.URL.revokeObjectURL(url);
     }, 1000);
     
-    // Feedback para o usuário
-    alert("Evento gerado! Se o download não iniciar automaticamente, verifique sua pasta de downloads ou pop-ups bloqueados.");
+    // Feedback
+    alert("Arquivo baixado! No iPhone, abra o arquivo 'evento.ics' e toque em 'Adicionar ao Calendário'.");
 }
 
-// Tenta executar automaticamente em alguns dispositivos
+// Tenta detectar iOS e dar instruções específicas
 window.onload = function() {
-    // Se for um dispositivo móvel, pode tentar executar automaticamente
-    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Opcional: auto-executar após um breve delay
-        // setTimeout(adicionarAoCalendario, 500);
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isIOS) {
+        console.log("Dispositivo iOS detectado");
     }
 };
 </script>
