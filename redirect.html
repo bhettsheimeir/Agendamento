@@ -6,6 +6,7 @@
 </head>
 <body>
 <a href="#" onclick="gerarEvento()">📅 Adicionar ao iPhone</a>
+
 <script>
 function gerarEvento() {
     const ics = `BEGIN:VCALENDAR
@@ -13,13 +14,22 @@ VERSION:2.0
 BEGIN:VEVENT
 SUMMARY:Agendamento Automático ✅
 DESCRIPTION:Este é um agendamento automático de teste.
-DTSTART:20251012T210615Z
-DTEND:20251012T220615Z
+DTSTART:20251012T211635Z
+DTEND:20251012T221635Z
 END:VEVENT
 END:VCALENDAR`;
+    
     const blob = new Blob([ics], {type: 'text/calendar'});
     const url = URL.createObjectURL(blob);
-    window.location.href = url;
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'evento.ics';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    setTimeout(() => URL.revokeObjectURL(url), 100);
 }
 </script>
 </body>
