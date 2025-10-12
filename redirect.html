@@ -4,75 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Abrir Calendário</title>
-<style>
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background: #f5f5f7;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    .container {
-        background: white;
-        border-radius: 16px;
-        padding: 30px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        max-width: 400px;
-        width: 90%;
-        text-align: center;
-    }
-    .btn {
-        display: block;
-        background: #007AFF;
-        color: white;
-        padding: 18px 30px;
-        border-radius: 12px;
-        text-decoration: none;
-        font-size: 18px;
-        font-weight: 600;
-        margin: 15px 0;
-        border: none;
-        width: 100%;
-        cursor: pointer;
-    }
-</style>
 </head>
 <body>
-    <div class="container">
-        <h1>📅 Abrir Calendário</h1>
-        <p>Clique no botão abaixo para abrir o app de Calendário do iPhone.</p>
-        
-        <button class="btn" onclick="abrirCalendario()">
-            📱 Abrir App Calendário
-        </button>
-        
-        <p style="margin-top: 20px; font-size: 14px; color: #666;">
-            O app de Calendário será aberto para você criar o evento manualmente.
-        </p>
-    </div>
-
 <script>
-function abrirCalendario() {
-    // Abre o app de Calendário do iPhone
-    window.location.href = "calshow://";
-    
-    // Fallback: se não abrir em 1 segundo, mostra mensagem
-    setTimeout(function() {
-        alert("Se o Calendário não abriu automaticamente, abra o app Calendário manualmente.");
-    }, 1000);
-}
+// Tenta abrir o app de Calendário do iOS
+window.location.href = "calshow://";
 
-// Tenta abrir automaticamente em dispositivos Apple
-window.onload = function() {
-    const isApple = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (isApple) {
-        setTimeout(abrirCalendario, 500);
-    }
-};
+// Se não abrir em 2 segundos, mostra instruções
+setTimeout(function() {
+    document.body.innerHTML = `
+        <div style="text-align: center; padding: 50px 20px; font-family: -apple-system, sans-serif;">
+            <h1>📅 Abrir Calendário</h1>
+            <p>Se o Calendário não abriu automaticamente:</p>
+            <p>1. Volte para o Telegram</p>
+            <p>2. Abra o app Calendário manualmente</p>
+            <p>3. Crie o evento com as informações fornecidas</p>
+        </div>
+    `;
+}, 2000);
 </script>
 </body>
 </html>
