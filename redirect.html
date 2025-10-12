@@ -58,6 +58,14 @@
         padding: 15px;
         margin: 15px 0;
     }
+    .instructions {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        padding: 15px;
+        margin: 15px 0;
+        font-size: 14px;
+        text-align: left;
+    }
 </style>
 </head>
 <body>
@@ -67,70 +75,106 @@
         <div class="event-info">
             <h3>Agendamento Automático ✅</h3>
             <p>Este é um agendamento automático de teste.</p>
-            <p><strong>Data:</strong> 12/10/2025 21:31</p>
+            <p><strong>Data:</strong> 12/10/2025 21:40</p>
         </div>
 
-        <button class="btn" onclick="baixarICS()">
-            📱 Baixar Arquivo .ICS
+        <button class="btn" onclick="adicionarCalendario()">
+            📱 Adicionar ao Calendário
         </button>
         
-        <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=Agendamento%20Autom%C3%A1tico%20%E2%9C%85&dates=20251012T213120Z/20251012T223120Z&details=Este%20%C3%A9%20um%20agendamento%20autom%C3%A1tico%20de%20teste." class="btn btn-secondary" style="text-decoration: none;">
-            📅 Google Calendar
-        </a>
-        
-        <p style="margin-top: 20px; font-size: 14px; opacity: 0.8;">
+        <div class="instructions">
             <strong>Instruções para iPhone:</strong><br>
-            1. Clique em "Baixar Arquivo .ICS"<br>
-            2. Abra o arquivo baixado<br>
-            3. Toque em "Adicionar ao Calendário"
-        </p>
+            1. Clique no botão acima<br>
+            2. Toque em "Abrir no Calendário"<br>
+            3. Confirme o evento e salve
+        </div>
+
+        <div style="margin-top: 20px; font-size: 12px; opacity: 0.7;">
+            Se não funcionar, tente abrir em outro navegador (Safari recomendado)
+        </div>
     </div>
 
 <script>
-function baixarICS() {
-    // Formata as datas
-    const dtStart = "20251012T213120Z";
-    const dtEnd = "20251012T223120Z";
-    
-    // Cria o conteúdo do arquivo .ics
+function adicionarCalendario() {
+    // Conteúdo do arquivo .ics
     const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
+PRODID:-//Agendamento//App//EN
 BEGIN:VEVENT
+UID:20251012T214011Z@agendamento
 SUMMARY:Agendamento Automático ✅
 DESCRIPTION:Este é um agendamento automático de teste.
-DTSTART:20251012T213120Z
-DTEND:20251012T223120Z
+DTSTART:20251012T214011Z
+DTEND:20251012T224011Z
+DTSTAMP:20251012T204011Z
+CREATED:20251012T204011Z
+LAST-MODIFIED:20251012T204011Z
+SEQUENCE:0
+STATUS:CONFIRMED
+TRANSP:OPAQUE
 END:VEVENT
 END:VCALENDAR`;
+
+    // Cria blob com tipo MIME específico
+    const blob = new Blob([icsContent], { 
+        type: 'text/calendar;charset=utf-8;'
+    });
     
-    // Cria o blob
-    const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
-    const url = window.URL.createObjectURL(blob);
+    // Cria URL
+    const url = URL.createObjectURL(blob);
     
-    // Cria link de download
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "evento.ics";
+    // Para iOS - usa abordagem específica
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        // Método 1: Tenta abrir diretamente
+        window.location.href = url;
+        
+        // Método 2: Fallback após 1 segundo
+        setTimeout(function() {
+            // Cria link invisível e clica
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'evento.ics');
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Instruções específicas
+            setTimeout(function() {
+                alert('Se o calendário não abriu automaticamente:\n\n1. Toque no arquivo "evento.ics" que foi baixado\n2. Toque em "Compartilhar"\n3. Escolha "Copiar para Calendário"');
+            }, 500);
+        }, 1000);
+    } else {
+        // Para outros dispositivos - download normal
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'evento.ics';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
     
-    // Adiciona ao DOM e clica
-    document.body.appendChild(link);
-    link.click();
-    
-    // Remove do DOM e limpa URL
-    document.body.removeChild(link);
-    setTimeout(() => {
-        window.URL.revokeObjectURL(url);
-    }, 1000);
-    
-    // Feedback
-    alert("Arquivo baixado! No iPhone, abra o arquivo 'evento.ics' e toque em 'Adicionar ao Calendário'.");
+    // Limpa a URL após um tempo
+    setTimeout(function() {
+        URL.revokeObjectURL(url);
+    }, 30000);
 }
 
-// Tenta detectar iOS e dar instruções específicas
+// Tenta executar automaticamente em iOS
 window.onload = function() {
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (isIOS) {
-        console.log("Dispositivo iOS detectado");
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Se for iOS e não tiver parâmetro de redirecionamento, tenta auto-executar
+    if (isIOS && !urlParams.has('auto')) {
+        // Adiciona parâmetro para evitar loop
+        if (!urlParams.has('executed')) {
+            setTimeout(function() {
+                window.location.href = window.location.href + '?executed=true';
+            }, 100);
+        } else {
+            setTimeout(adicionarCalendario, 500);
+        }
     }
 };
 </script>
