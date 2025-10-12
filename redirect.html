@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adicionar ao Calendário</title>
+<title>Abrir Calendário</title>
 <style>
     body {
         font-family: -apple-system, BlinkMacSystemFont, sans-serif;
@@ -39,91 +39,38 @@
         width: 100%;
         cursor: pointer;
     }
-    .btn-secondary {
-        background: #34C759;
-    }
-    .event-info {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 20px;
-        margin: 20px 0;
-        text-align: left;
-    }
-    .instructions {
-        background: #fff3cd;
-        border: 1px solid #ffeaa7;
-        border-radius: 10px;
-        padding: 15px;
-        margin: 15px 0;
-        font-size: 14px;
-        text-align: left;
-        color: #856404;
-    }
 </style>
 </head>
 <body>
     <div class="container">
-        <h1>📅 Adicionar Evento</h1>
+        <h1>📅 Abrir Calendário</h1>
+        <p>Clique no botão abaixo para abrir o app de Calendário do iPhone.</p>
         
-        <div class="event-info">
-            <h3 style="margin: 0 0 10px 0;">Agendamento Automático ✅</h3>
-            <p style="margin: 0 0 10px 0;">Este é um agendamento automático de teste.</p>
-            <p style="margin: 0;"><strong>Data:</strong> 12/10/2025 21:47</p>
-        </div>
-
-        <!-- Método 1: Link direto para Google Calendar (funciona no iPhone) -->
-        <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=Agendamento%20Autom%C3%A1tico%20%E2%9C%85&dates=20251012T214710Z/20251012T224710Z&details=Este%20%C3%A9%20um%20agendamento%20autom%C3%A1tico%20de%20teste.&sf=true&output=xml" 
-           class="btn">
-            📅 Adicionar ao Calendário
-        </a>
-
-        <!-- Método 2: Download manual do .ics -->
-        <button class="btn btn-secondary" onclick="downloadICS()">
-            📥 Baixar Arquivo .ICS
+        <button class="btn" onclick="abrirCalendario()">
+            📱 Abrir App Calendário
         </button>
-
-        <div class="instructions">
-            <strong>Para iPhone:</strong><br>
-            1. Use o botão "Adicionar ao Calendário" (recomendado)<br>
-            2. Ou baixe o .ICS e compartilhe com o app Calendário
-        </div>
+        
+        <p style="margin-top: 20px; font-size: 14px; color: #666;">
+            O app de Calendário será aberto para você criar o evento manualmente.
+        </p>
     </div>
 
 <script>
-function downloadICS() {
-    const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-BEGIN:VEVENT
-SUMMARY:Agendamento Automático ✅
-DESCRIPTION:Este é um agendamento automático de teste.
-DTSTART:20251012T214710Z
-DTEND:20251012T224710Z
-UID:20251012T214710Z@agendamento
-DTSTAMP:20251012T204710Z
-END:VEVENT
-END:VCALENDAR`;
-
-    const blob = new Blob([icsContent], { type: 'text/calendar' });
-    const url = URL.createObjectURL(blob);
+function abrirCalendario() {
+    // Abre o app de Calendário do iPhone
+    window.location.href = "calshow://";
     
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'evento_calendario.ics';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    setTimeout(() => {
-        URL.revokeObjectURL(url);
-        alert('Arquivo baixado! No iPhone:\n\n1. Abra o app Arquivos\n2. Encontre "evento_calendario.ics"\n3. Toque no arquivo\n4. Toque em "Compartilhar"\n5. Escolha "Copiar para Calendário"');
+    // Fallback: se não abrir em 1 segundo, mostra mensagem
+    setTimeout(function() {
+        alert("Se o Calendário não abriu automaticamente, abra o app Calendário manualmente.");
     }, 1000);
 }
 
-// Redirecionamento automático para Google Calendar em dispositivos móveis
+// Tenta abrir automaticamente em dispositivos Apple
 window.onload = function() {
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (isMobile) {
-        console.log('Dispositivo móvel detectado - Google Calendar é a melhor opção');
+    const isApple = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isApple) {
+        setTimeout(abrirCalendario, 500);
     }
 };
 </script>
