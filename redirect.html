@@ -1,32 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Adicionar ao Calendário</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta http-equiv="refresh" content="0; URL='https://www.google.com/calendar/render?action=TEMPLATE&text=Agendamento%20Autom%C3%A1tico%20%E2%9C%85&dates=20251012T204218Z/20251012T214218Z&details=Evento%20de%20teste%20para%20redirecionamento%20autom%C3%A1tico'" />
+<title>Redirecionando para o calendário...</title>
 </head>
 <body>
-    <h1>Carregando calendário...</h1>
-    <p>Se o aplicativo não abrir automaticamente, clique no link abaixo para adicionar:</p>
-    <a id="fallback-link" href="#">Adicionar manualmente</a>
-
-    <script>
-        // ****************************************************************************
-        // ** SUBSTITUA ESTA URL PELA SUA URL WEB CALENDAR REAL! **
-        // ****************************************************************************
-        var webcalUrl = "webcal://gio.it.tab.digital/remote.php/dav/public-calendars/ndWqCDcX9dqGXeS9?export";
-
-        // Tenta forçar a abertura do protocolo webcal (funciona no iOS/iPadOS)
-        window.location.replace(webcalUrl);
-
-        // Atualiza o link de fallback
-        document.getElementById('fallback-link').href = webcalUrl;
-
-        // Opcional: Define um pequeno timeout para o caso de o navegador ser lento
-        setTimeout(function() {
-            document.body.innerHTML += '<p>O sistema operacional do seu dispositivo deve abrir o aplicativo de calendário agora.</p>';
-        }, 1000);
-
-    </script>
+<p>Redirecionando automaticamente para o calendário...</p>
+<script>
+window.location.href = "https://www.google.com/calendar/render?action=TEMPLATE&text=Agendamento%20Autom%C3%A1tico%20%E2%9C%85&dates=20251012T204218Z/20251012T214218Z&details=Evento%20de%20teste%20para%20redirecionamento%20autom%C3%A1tico";
+</script>
 </body>
 </html>
